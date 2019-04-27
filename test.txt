@@ -1,0 +1,23 @@
+create_parking_lot 6
+park KA-01-P-333 White
+park KA-01-P-334 Black
+park KA-01-P-335 White
+status
+leave 2
+status
+park KA-01-P-336 White
+status
+park KA-01-P-337 Black
+park KA-01-P-338 White
+park KA-01-P-339 White
+status
+park KA-01-P-339 White
+registration_numbers_for_cars_with_colour white
+slot_numbers_for_cars_with_colour blue
+slot_numbers_for_cars_with_colour black
+slot_number_for_registration_number KA-01-P-339
+status
+slot_number_for_registration_number KA-01-P-38
+park KA-01-P-321 White
+status
+exit

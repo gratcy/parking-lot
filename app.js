@@ -1,7 +1,7 @@
 const readline = require('readline')
 const rl = readline.createInterface({
-input: process.stdin,
-output: process.stdout
+  input: process.stdin,
+  output: process.stdout
 })
 
 console.log('Parking System is ready to receive input!\n')
@@ -50,7 +50,7 @@ const parkCar = (plate, colour) => {
             colour: colour
           }
 
-          allocatedNumber = i
+          allocatedNumber = (i + 1)
           break
         }
       }
@@ -70,7 +70,7 @@ const parkStatus = () => {
     msg = 'Slot No.\tRegistration No\t\tColour\n'
     for (let i=0;i<parking.length;++i) {
       if (parking[i].hasOwnProperty('plate')) {
-        msg += `${i+1}\t\t${parking[i].plate}\t\t\t${parking[i].colour}\n`
+        msg += `${i+1}\t\t${parking[i].plate}\t\t${parking[i].colour}\n`
       }
     }
     return msg
@@ -129,6 +129,11 @@ const CommandHelp = () => {
   msg += 'create_parking_lot <number> \t :To Create total number of parking slots\n'
   msg += 'status \t\t\t\t :To Check for parking status. eg: all cars parked.\n'
   msg += 'leave <number>\t\t\t :Leave a car from parking state.\n'
+  msg += 'park <plate> <car colour>\t :To park a car.\n'
+  msg += 'registration_numbers_for_cars_with_colour <car colour>\t :To find cars by colour.\n'
+  msg += 'slot_numbers_for_cars_with_colour <car colour>\t :To find cars by colour.\n'
+  msg += 'slot_number_for_registration_number <plate>\t :To find a car by plate.\n'
+  msg += 'help \t\t\t\t :Help center.\n'
   return msg
 }
 
@@ -177,4 +182,13 @@ rl.on('line', (line) => {
 }).on('close', () => {
   console.log('Have a great day!')
   process.exit(0)
+})
+
+rl.on('SIGINT', () => {
+  rl.question('Are you sure you want to exit? ', (answer) => {
+    if (answer.match(/^y(es)?$/i)) {
+      console.log('Have a great day!')
+      rl.pause()
+    }
+  })
 })

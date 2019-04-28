@@ -1,8 +1,12 @@
 const readline = require('readline')
+const fs = require('fs')
+
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 })
+
+const inputText = process.argv[2]
 
 console.log('Parking System is ready to receive input!\n')
 
@@ -70,7 +74,11 @@ const parkStatus = () => {
     msg = 'Slot No.\tRegistration No\t\tColour\n'
     for (let i=0;i<parking.length;++i) {
       if (parking[i].hasOwnProperty('plate')) {
-        msg += `${i+1}\t\t${parking[i].plate}\t\t${parking[i].colour}\n`
+        if ((i + 1) === parking.length) {
+          msg += `${i+1}\t\t${parking[i].plate}\t\t${parking[i].colour}`
+        } else {
+          msg += `${i+1}\t\t${parking[i].plate}\t\t${parking[i].colour}\n`
+        }
       }
     }
     return msg
@@ -98,13 +106,16 @@ const findCarByColour = (colour, type) => {
         slots.push(i + 1)
       }
     } else {
-      slots.push(parking[i].plate)
+      if (parking[i].colour.toLowerCase() === colour.toLowerCase()) {
+        slots.push(parking[i].plate)
+      }
     }
   }
+
   if (slots.length > 0) {
     return slots.join(', ')
   } else {
-    return `Car with colour ${colour} is not exists.`
+    return `Not found.`
   }
 }
 
@@ -120,7 +131,7 @@ const findCarByPlate = (plate) => {
   if (slot > 0) {
     return slot.toString()
   } else {
-    return `Car with plate ${plate} is not exists.`
+    return `Not found.`
   }
 }
 
@@ -128,7 +139,7 @@ const CommandHelp = () => {
   let msg = 'Options:\n'
   msg += 'create_parking_lot <number> \t :To Create total number of parking slots\n'
   msg += 'status \t\t\t\t :To Check for parking status. eg: all cars parked.\n'
-  msg += 'leave <number>\t\t\t :Leave a car from parking state.\n'
+  msg += 'leave <number>\t\t\t :Leave a car from parking lot.\n'
   msg += 'park <plate> <car colour>\t :To park a car.\n'
   msg += 'registration_numbers_for_cars_with_colour <car colour>\t :To find cars by colour.\n'
   msg += 'slot_numbers_for_cars_with_colour <car colour>\t :To find cars by colour.\n'
@@ -137,58 +148,71 @@ const CommandHelp = () => {
   return msg
 }
 
-rl.on('line', (line) => {
-  let command = line.trim().split(' ')
-  switch (command[0]) {
-    case 'create_parking_lot':
-      console.log(setParkingSlots(command[1]))
-      break
-    case 'park':
-      if (command.length  === 3) {
-        console.log(parkCar(command[1], command[2]))
-      } else {
-        console.log('Invalid command for parking.')
-      }
-      break
-    case 'leave':
-      console.log(parkLeave(command[1]))
-      break
-    case 'status':
-      console.log(parkStatus())
-      break
-    case 'registration_numbers_for_cars_with_colour':
-      console.log(findCarByColour(command[1], 2))
-      break
-    case 'slot_numbers_for_cars_with_colour':
-      console.log(findCarByColour(command[1], 1))
-      break
-    case 'slot_number_for_registration_number':
-      console.log(findCarByPlate(command[1]))
-      break
-    case 'help':
-      console.log(CommandHelp())
-      break
-    case 'exit':
-      rl.close()
-      break
-    case '':
-      break
-    default:
-      console.log(`Invalid command.`)
-      break
-  }
-
-  rl.prompt()
-}).on('close', () => {
-  console.log('Have a great day!')
-  process.exit(0)
-})
-
-rl.on('SIGINT', () => {
-  rl.question('Are you sure you want to exit? ', (answer) => {
-    if (answer.match(/^y(es)?$/i)) {
-      console.log('Have a great day!')
-      rl.pause()
+const readCommand = (line) => {
+    let command = line.trim().split(' ')
+    switch (command[0]) {
+      case 'create_parking_lot':
+        console.log(setParkingSlots(command[1]))
+        break
+      case 'park':
+        if (command.length  === 3) {
+          console.log(parkCar(command[1], command[2]))
+        } else {
+          console.log('Invalid command for parking.')
+        }
+        break
+      case 'leave':
+        console.log(parkLeave(command[1]))
+        break
+      case 'status':
+        console.log(parkStatus())
+        break
+      case 'registration_numbers_for_cars_with_colour':
+        console.log(findCarByColour(command[1], 2))
+        break
+      case 'slot_numbers_for_cars_with_colour':
+        console.log(findCarByColour(command[1], 1))
+        break
+      case 'slot_number_for_registration_number':
+        console.log(findCarByPlate(command[1]))
+        break
+      case 'help':
+        console.log(CommandHelp())
+        break
+      case 'exit':
+        rl.close()
+        break
+      case '':
+        break
+      default:
+        console.log(`Invalid command.`)
+        break
     }
+}
+
+if (inputText !== undefined) {
+  var lineReader = readline.createInterface({
+    input: fs.createReadStream(inputText)
   })
-})
+
+  lineReader.on('line', function (line) {
+    readCommand(line)
+  })
+} else {
+  rl.on('line', (line) => {
+    readCommand(line)
+    rl.prompt()
+  }).on('close', () => {
+    console.log('Have a great day!')
+    process.exit(0)
+  })
+
+  rl.on('SIGINT', () => {
+    rl.question('Are you sure you want to exit? ', (answer) => {
+      if (answer.match(/^y(es)?$/i)) {
+        console.log('Have a great day!')
+        rl.pause()
+      }
+    })
+  })
+}

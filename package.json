@@ -1,11 +1,12 @@
 {
   "name": "parking-lot",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Gojek coding test.",
+  "main": "app.js",
+  "bin": "bin.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Gratcy Palma P Hutapea",
   "license": "ISC"
 }

@@ -2,6 +2,7 @@
 Gojek Coding Test
 
 [Installation](#installation) |
+[Usage of packaged app](#Usage-of-packaged-app) |
 [App Documentation](#app-documentation) |
 [License](#license)
 
@@ -23,6 +24,12 @@ Gojek Coding Test
 ```
 
 ## App Documentation
+You can use command by execute file app.js or running binary file app.
+```
+	$ node app.js
+	$ ./app
+```
+
 Commands
 - create_parking_lot <number> :To Create total number of parking slots.
 - status :To Check for parking status.
